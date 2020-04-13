@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth.models import User
+from .models import BookDetails
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -8,6 +9,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username',)
+
+class bookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookDetails
+        fields = ('title','amazon_url','author','genre') 
+    
 
 
 class UserSerializerWithToken(serializers.ModelSerializer):

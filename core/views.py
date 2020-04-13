@@ -1,12 +1,13 @@
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
-from rest_framework import permissions, status
+from rest_framework import permissions, status,generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import UserSerializer, UserSerializerWithToken
+from .serializers import UserSerializer, UserSerializerWithToken,bookSerializer
+from django.http import JsonResponse
 
-
+from .models import BookDetails
 @api_view(['GET'])
 def current_user(request):
     """
@@ -16,6 +17,79 @@ def current_user(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getbooks1(request):
+    queryset = BookDetails.objects.all()
+    print("query set is")
+    print(queryset)
+    serializer_class = bookSerializer(queryset, many=True)
+    print('s data is ')
+    print(serializer_class.data)
+    return Response(serializer_class.data)
+    #return JsonResponse({"data": list(queryset)})
+
+@api_view(['PUT'])
+def UpdateBook(request, pk):
+    print(pk)
+
+    serializer = BookDetails.objects.get(id=pk)
+    print('daddad daad')
+    print(serializer)
+    serializer_class = bookSerializer(serializer, data=request.data)
+
+    if serializer_class.is_valid():
+        serializer.save()
+        return Response(serializer_class.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def DeleteBook(request, pk):
+    print('delete called and id is')
+    print(pk)
+
+    serializer = BookDetails.objects.get(id=pk)
+    serializer.delete()
+    return Response(status=status.HTTP_200_OK)
+# @api_view(['DELETE'])
+# def DeleteBook(request):
+# snippet.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+@api_view(['POST'])
+def AddBook(request):
+    print("entered in add")
+    serializer = bookSerializer(data=request.data)
+    print("ser")
+    print (serializer)
+    print("data is 1")
+    print (request.data)
+    if serializer.is_valid(raise_exception=True):
+        print("data came is valid")
+        #print(serializer.object.title)
+        print(serializer)
+        serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        
+
+# class getAllBooks(APIView):
+#     #permission_classes = (permissions.AllowAny,)
+#     def getbooks(self,request):
+#         queryset = Book.objects.all()
+
+#         serializer_class = bookSerializer
+#         return Response(serializer_class.data, status=status.HTTP_200_OK)
+
+
+
+
+    
+    
+
+
+# class editBookByIdAPI(generics.ListCreateAPIView):
+#     queryset = Book.objects.all()
+#     serializer_class = bookSerializer
 
 class UserList(APIView):
     """

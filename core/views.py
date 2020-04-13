@@ -18,7 +18,7 @@ def current_user(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def getbooks1(request):
+def getbooks(request):
     queryset = BookDetails.objects.all()
     print("query set is")
     print(queryset)
@@ -26,10 +26,9 @@ def getbooks1(request):
     print('s data is ')
     print(serializer_class.data)
     return Response(serializer_class.data)
-    #return JsonResponse({"data": list(queryset)})
 
 @api_view(['PUT'])
-def UpdateBook(request, pk):
+def updateBookById(request, pk):
     print(pk)
 
     serializer = BookDetails.objects.get(id=pk)
@@ -43,20 +42,16 @@ def UpdateBook(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
-def DeleteBook(request, pk):
+def deleteBookbyId(request, pk):
     print('delete called and id is')
     print(pk)
 
     serializer = BookDetails.objects.get(id=pk)
     serializer.delete()
     return Response(status=status.HTTP_200_OK)
-# @api_view(['DELETE'])
-# def DeleteBook(request):
-# snippet.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
 @api_view(['POST'])
-def AddBook(request):
+def addBook(request):
     print("entered in add")
     serializer = bookSerializer(data=request.data)
     print("ser")
@@ -65,31 +60,9 @@ def AddBook(request):
     print (request.data)
     if serializer.is_valid(raise_exception=True):
         print("data came is valid")
-        #print(serializer.object.title)
         print(serializer)
         serializer.save()
     return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        
-
-# class getAllBooks(APIView):
-#     #permission_classes = (permissions.AllowAny,)
-#     def getbooks(self,request):
-#         queryset = Book.objects.all()
-
-#         serializer_class = bookSerializer
-#         return Response(serializer_class.data, status=status.HTTP_200_OK)
-
-
-
-
-    
-    
-
-
-# class editBookByIdAPI(generics.ListCreateAPIView):
-#     queryset = Book.objects.all()
-#     serializer_class = bookSerializer
 
 class UserList(APIView):
     """

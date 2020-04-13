@@ -1,15 +1,12 @@
 from django.urls import path
-from .views import current_user, UserList,getbooks1,AddBook,UpdateBook,DeleteBook
+from .views import current_user, UserList,getbooks,
+addBook,updateBookById,deleteBookbyId
 
 urlpatterns = [
     path('current_user/', current_user),
-    path('getbooks1', getbooks1),
-    path('AddBook', AddBook),
-    path('updateBookById/<int:pk>', UpdateBook),
-    path('DeleteBook/<int:pk>', DeleteBook),
-    
-
-    #path('editBookByIdAPI', views.editBookByIdAPI.as_view()),
+    path('getAllBooks', getbooks),
+    path('addBook', addBook),
+    path('updateBookById/<int:pk>', updateBookById),
+    path('deleteBookbyId/<int:pk>', deleteBookbyId),
     path('users/', UserList.as_view())
-
 ]
